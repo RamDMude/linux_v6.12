@@ -1,0 +1,75 @@
+diff --git a/Makefile b/Makefile
+index 68a8faff2..56ab5e601 100644
+--- a/Makefile
++++ b/Makefile
+@@ -725,7 +725,7 @@ endif
+ 
+ ifeq ($(KBUILD_EXTMOD),)
+ # Objects we will link into vmlinux / subdirs we need to visit
+-core-y		:=
++core-y		:= ece5414_p1/
+ drivers-y	:=
+ libs-y		:= lib/
+ endif # KBUILD_EXTMOD
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 7093ee21c..d26f786c6 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -429,5 +429,6 @@
+ 545	x32	execveat		compat_sys_execveat
+ 546	x32	preadv2			compat_sys_preadv64v2
+ 547	x32	pwritev2		compat_sys_pwritev64v2
++548	common  s2_encrypt              sys_s2_encrypt
+ # This is the end of the legacy x32 range.  Numbers 548 and above are
+ # not special and are not to be used for x32-specific syscalls.
+diff --git a/ece5414_p1/Makefile b/ece5414_p1/Makefile
+new file mode 100644
+index 000000000..a975feada
+--- /dev/null
++++ b/ece5414_p1/Makefile
+@@ -0,0 +1 @@
++obj-y := p1_encrypt.o
+diff --git a/ece5414_p1/p1_encrypt.c b/ece5414_p1/p1_encrypt.c
+new file mode 100644
+index 000000000..6f1a3ce6c
+--- /dev/null
++++ b/ece5414_p1/p1_encrypt.c
+@@ -0,0 +1,27 @@
++#include <linux/kernel.h>
++#include <linux/syscalls.h>
++#include <linux/uaccess.h>
++#include <linux/errno.h>
++
++SYSCALL_DEFINE2(s2_encrypt, char __user *, user_str, int, key)
++{
++    char buf[256]; // Buffer for input string
++    int i;
++
++    // Validate key range
++    if (key < 1 || key > 5)
++        return -EINVAL;
++
++    // Copy string from user space to kernel space
++    if (strncpy_from_user(buf, user_str, sizeof(buf)) < 0)
++        return -EFAULT;
++
++    // Encrypt the string
++    for (i = 0; buf[i] != '\0' && i < sizeof(buf) - 1; i++)
++        buf[i] += key;
++
++    // Print encrypted string
++    printk(KERN_INFO "Encrypted String: %s\n", buf);
++
++    return 0;
++}
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 575810492..2f55bade2 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1303,4 +1303,6 @@ int __sys_getsockopt(int fd, int level, int optname, char __user *optval,
+ 		int __user *optlen);
+ int __sys_setsockopt(int fd, int level, int optname, char __user *optval,
+ 		int optlen);
++/*Custom syscall for ece5414*/
++asmlinkage long sys_s2_encrypt(char __user *user_str, int key);
+ #endif

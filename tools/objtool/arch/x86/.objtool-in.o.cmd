@@ -1,0 +1,1 @@
+cmd_/home/ram/linux_v6.12/tools/objtool/arch/x86/objtool-in.o :=  ld -r -o /home/ram/linux_v6.12/tools/objtool/arch/x86/objtool-in.o  /home/ram/linux_v6.12/tools/objtool/arch/x86/special.o /home/ram/linux_v6.12/tools/objtool/arch/x86/decode.o /home/ram/linux_v6.12/tools/objtool/arch/x86/orc.o

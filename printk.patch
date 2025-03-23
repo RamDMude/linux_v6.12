@@ -1,0 +1,20 @@
+diff --git a/net/socket.c b/net/socket.c
+index 042451f01..453373d5a 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -2017,6 +2017,7 @@ int __sys_accept4(int fd, struct sockaddr __user *upeer_sockaddr,
+ 	int ret = -EBADF;
+ 	struct fd f;
+ 
++	printk(KERN_INFO "LKP: Kernel Message from accept()");
+ 	f = fdget(fd);
+ 	if (fd_file(f)) {
+ 		ret = __sys_accept4_file(fd_file(f), upeer_sockaddr,
+@@ -2079,6 +2080,7 @@ int __sys_connect(int fd, struct sockaddr __user *uservaddr, int addrlen)
+ 	int ret = -EBADF;
+ 	struct fd f;
+ 
++	printk(KERN_INFO "LKP: Kernel Message from connect()");
+ 	f = fdget(fd);
+ 	if (fd_file(f)) {
+ 		struct sockaddr_storage address;

@@ -1,0 +1,1 @@
+/home/ram/linux_v6.12/scripts/gdb/vmlinux-gdb.py
